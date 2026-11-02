@@ -69,9 +69,12 @@ static CHHapticPattern *simple_pattern(dm_haptic_level level, NSError **error) {
 // low band at 0.1-0.4 all race long: 0.45 leaves crashes and drifts). The mapping stays linear by default: the opposite need, low levels that
 // rotating motors do not render at all (Breath of the Wild's charged attack on an Xbox controller), is open (docs/reference/services.md)
 static float rumble_min;
+static int rumble_boost;
 static float controller_level(float x) {
     x = isfinite(x) ? fmaxf(0, fminf(1, x)) : 0;
-    return x <= rumble_min ? 0 : (x - rumble_min) / (1 - rumble_min);
+    x = x <= rumble_min ? 0 : (x - rumble_min) / (1 - rumble_min);
+    if (rumble_boost && x > 0) x = 0.7f + 0.3f * x;
+    return x;
 }
 static void report(NSError *e, NSString *target, const char *stage) {
     if (++errors <= 8 || errors % 64 == 0) {
@@ -400,6 +403,8 @@ void dm_haptics_apple_init(void) {
         if (e) { float v = strtof(e, NULL); if (isfinite(v)) gain = fmaxf(0, fminf(3, v)); }
         e = getenv("DM_RUMBLE_MIN");
         if (e) { float v = strtof(e, NULL); if (isfinite(v)) rumble_min = fmaxf(0, fminf(0.9f, v)); }
+        e = getenv("DM_RUMBLE_BOOST");
+        rumble_boost = e && atoi(e) != 0;
         e = getenv("DM_RUMBLE");
         dm_haptics_init(apply, !e || atoi(e) != 0);
 #if TARGET_OS_IPHONE
