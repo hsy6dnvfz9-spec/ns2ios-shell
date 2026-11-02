@@ -20,6 +20,7 @@
 + dm/ios/Sources/dm_shader_learn.h        # what the host learns about a shader's output types, from a refused pipeline
 + dm/ios/Sources/dm_shader_learn.m        # the rewrite that makes a colour output integer, and the rows it keeps
 + dm/ios/tools/shell_build.sh             # builds the game-free shell
++ dm/host/haptics_apple.m
 + dm/ios/DmIOS.entitlements               # increased-memory-limit: the shell is signed ad hoc with it so install tools see it
 + dm/tools/supported_list.py              # the supported-games page and release asset, from dm/games/*/game.tsv
 + dm/tools/packer_sync.py                 # keeps this fork's copies of dm/tools, dm/gfx/tools and dm/games level with upstream
